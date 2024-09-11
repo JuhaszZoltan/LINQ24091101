@@ -81,3 +81,39 @@ List<Cat> cats = [
  * "rendezés"
  * halmaztételek
 */
+
+float linqOsszegzes = cats.Sum(c => c.Weight);
+Console.WriteLine($"cicak osszsulya: {linqOsszegzes} Kg");
+
+double linqAtlageletkor = cats.Average(c => c.Age);
+Console.WriteLine($"cicak atlageletkora: {linqAtlageletkor} ev");
+
+int linqHazimacskakSzama = cats.Count(c => c.Breed == "házimacska");
+Console.WriteLine($"hazimacskak szama: {linqHazimacskakSzama} db");
+
+DateTime linqLegfiatalabbMacskaSzD = cats.Max(c => c.Birth);
+Console.WriteLine($"legfiatalabb cica szulinapja: {linqLegfiatalabbMacskaSzD:yyyy-MM-dd}");
+
+Cat linqlegveznabbCic = cats.MinBy(c => c.Weight);
+Console.WriteLine($"legvéznabb cica neve: {linqlegveznabbCic}");
+
+int abcbenElsoCica = cats.IndexOf(cats.MinBy(c => c.Name));
+Console.WriteLine($"nevsorban elso cica indexe: {abcbenElsoCica}");
+
+//-------------------------
+
+Console.WriteLine("cicak nev szerint rendezve:");
+var nevSzerintRendezve = cats.OrderBy(c => c.Name);
+foreach (var cat in nevSzerintRendezve)
+{
+    Console.WriteLine($"\t- {cat}");
+}
+
+Console.WriteLine("-----------------------------");
+
+Console.WriteLine("cicak súly stzerint csokkenoben:");
+var sulySzerint = cats.OrderByDescending(c => c.Weight);
+foreach (var cat in sulySzerint)
+{
+    Console.WriteLine($"\t- {cat}");
+}

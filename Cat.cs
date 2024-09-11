@@ -9,5 +9,12 @@
         public bool Sex { get; set; }
         public float Weight { get; set; }
         public int Age => (int)(DateTime.Now - Birth).TotalDays / 365;
+
+        public override string ToString()
+        {
+            return $"[{Id}] {Name} " +
+                $"({(Sex ? "hím" : "nőstény")} {Breed}) - " +
+                $"{Weight:00.00} Kg, {Age} éves";
+        }
     }
 }
