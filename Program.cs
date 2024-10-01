@@ -69,16 +69,16 @@ List<Cat> cats = [
 #endregion
 
 /* eddig ismert nevezetes algoritmusok
- * sorozatszámítás (összegzést) => átlagszámítás
- * megszámlálás
- * szélsőérték meghatározás (minimum, maximum)
- * lineáris keresés
- * kiválasztás
- * eldöntés
+ * [x] sorozatszámítás (összegzést) => átlagszámítás
+ * [x] megszámlálás
+ * [x] szélsőérték meghatározás (minimum, maximum)
+ * [x] lineáris keresés
+ * [x] kiválasztás
+ * [x] eldöntés
  * 
- * kiválogatás
- * szétválogatás
- * "rendezés"
+ * [x] kiválogatás
+ * [x] szétválogatás
+ * [x] "rendezés"
  * halmaztételek
 */
 
@@ -117,3 +117,115 @@ foreach (var cat in sulySzerint)
 {
     Console.WriteLine($"\t- {cat}");
 }
+
+//-------------------------
+
+/*
+ * first
+ * first or default
+ * last
+ * last or default
+ * single
+ * single or default
+ -----------------
+ * index of
+*/
+
+Console.WriteLine("-----------------------------");
+
+var frst = cats.First(c => c.Breed == "perzsa");
+Console.WriteLine($"az első perzsacica: {frst}");
+//ha VAN egyezés, akkor a rendre ELSŐ {matching element}-el tér vissza
+//ha NINCS egyezés, akkor "sequence contains no matching element"-et dob
+
+var lst = cats.Last(c => c.Sex);
+Console.WriteLine($"az utolsú kisfiú: {lst}");
+//ha VAN egyezés, akkor a rendre UTOLSÓ {matching element}-el tér vissza
+//ha NINCS egyezés, akkor "sequence contains no matching element"-et dob
+
+var sngl = cats.Single(c => c.Breed == "szfinx");
+Console.WriteLine($"az egyetlen kopszi: {sngl}");
+//ha EGYETLEN EGY egyezés van, akkor a {matching element}-el tér vissza
+//ha több egyezés is "LENNE", akkor "sequence contains more than one matching element"-et dob
+//ha egyáltalán nincs egyezés, akkor "sequence contains no matching element"-et dob
+
+Console.WriteLine("-----------------------------");
+
+var frstod = cats.FirstOrDefault(c => c.Breed == "robot");
+Console.WriteLine($"van-e robotcica?: {(frstod is null ? "nincs" : "van, ő:" + frstod)}");
+//ha VAN egyezés, akkor a rendre ELSŐ {matching element}-el tér vissza
+//ha NINCS egyezés, akkor ún. 'default' értékkel tér vissza, ami
+//    REFERENCE (class)  type elemeknél {null}
+//    VALUE     (struct) type elemeknél <<<általában>>> 'zéró érték', vagy "kitöltetlen" struct init
+
+//int[] numbers = [11, 26, 50, 26, 3, 132, 42];
+//var res = numbers.FirstOrDefault(n => n % 2031 == 0);
+//Console.WriteLine($"res:= {res}");
+
+var lstod = cats.LastOrDefault(c => c.Sex);
+Console.WriteLine($"az utolsú kisfiú: {lstod}");
+//ha VAN egyezés, akkor a rendre UTOLSÓ {matching element}-el tér vissza
+//ha NINCS egyezés, akkor ún. 'default' értékkel tér vissza, ami
+//    REFERENCE (class)  type elemeknél {null}
+//    VALUE     (struct) type elemeknél 'zéró érték', vagy "kitöltetlen" struct init
+
+var snglod = cats.SingleOrDefault(c => c.Breed == "szfinx");
+Console.WriteLine($"az egyetlen kopszi: {snglod}");
+//ha EGYETLEN EGY egyezés van, akkor a {matching element}-el tér vissza
+//ha több egyezés is "LENNE", akkor "sequence contains more than one matching element"-et dob
+//ha NINCS egyezés, akkor ún. 'default' értékkel tér vissza, ami
+//    REFERENCE (class)  type elemeknél {null}
+//    VALUE     (struct) type elemeknél 'zéró érték', vagy "kitöltetlen" struct init
+
+var any = cats.Any(c => c.Breed == "perzsa");
+Console.WriteLine($"{(any ? "van" : "nincs")} perzsa macska");
+
+// .Exists()  <-- lényegében ua.
+// .Contains() (generic) 
+
+Console.WriteLine("~~~~~~~~~~~~~~~~~~");
+
+var whr = cats.Where(c => c.Breed == "házimacska");
+Console.WriteLine("házimacskák:");
+foreach (var c in whr) Console.WriteLine($"\t- {c}");
+
+Console.WriteLine("~~~~~~~~~~~~~~~~~~");
+
+var grpb = cats.GroupBy(c => c.Breed);
+
+Console.WriteLine("cicák alfajok szerint:");
+foreach (var group in grpb.OrderBy(g => g.Key))
+{
+    Console.WriteLine($"\t{group.Key} ({group.Count()} db)");
+    foreach (var cat in group.OrderBy(c => c.Name))
+    {
+        Console.WriteLine($"\t\t{cat}");
+    }
+}
+
+//"halmazoknál":
+// - Union, UnionBy         -> unió
+// - Except, ExceptBy       -> különbség
+// - Intersect, IntersectBy -> metszet
+
+var slct = cats
+    .Select(c => c.Breed) // <= kiválaszt egy property-t
+    .Distinct()           // <= szűri az ismétlődéseket
+    .Order();             // <= rendezi a szűrt string kollekciót
+Console.Write("minden macskafajta: ");
+foreach (var breed in slct) Console.Write(breed + " ");
+
+//az order és az orderdescending (az orderBY helyett) akkor használható,
+//ha a kollekció elemei nem összetettek
+
+//var slct2 = cats.Select(c => new { c.Name, c.Breed });
+//foreach (var item in slct2)
+//{
+//    Console.WriteLine($"{item.Name} + {item.Breed}");
+//}
+
+var ordrby = cats
+    .OrderByDescending(c => c.Breed)
+    .ThenBy(c => c.Name);
+Console.WriteLine("\nmacskák fajta szerint csökkenőben, azon belül név szerint növekvőben:");
+foreach (var cat in ordrby) Console.WriteLine($"\t{cat}");
